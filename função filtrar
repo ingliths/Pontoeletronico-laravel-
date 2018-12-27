@@ -1,0 +1,50 @@
+  public function search(){
+
+
+
+       
+    $dirId=Diretoria::find(Auth::user()->diretoria); 
+
+
+
+
+       if(input::get('dadosMatricula')== false){
+        
+
+        $dirId=Diretoria::find(Auth::user()->diretoria);     
+
+           
+          return view('relatorio_ponto',compact('dirId'));
+       }
+
+     
+     if(input::get('dadosMatricula')){
+
+       $pontos = $dirId->pontos()->where('PONTO_FUNCIONARIO','like','%'.input::get('dadosMatricula').'%')      
+       ->get();
+
+    
+      
+      }
+
+
+      if(input::get('dadosMatricula') == true && input::get('dadosEntrada')== true){
+
+         $data1 = input::get('dadosEntrada');
+         $data2 = input::get('dadosSaida');
+
+
+         $pontos = $dirId->pontos()->where('PONTO_FUNCIONARIO', 'like', '%' .input::get('dadosMatricula') . '%')
+                  ->whereBetween('PONTO_ENTRADA',[ $data1,$data2 ] )                 
+                  ->get(); 
+
+
+     }
+
+       
+
+      return view('search',compact('pontos'));
+
+   
+ 
+   }
